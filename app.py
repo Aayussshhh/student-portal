@@ -1,21 +1,16 @@
-
 import streamlit as st
-import google.generativeai as genai
+from groq import Groq
 import os
 from dotenv import load_dotenv
 
 # Load API Key
 load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")
+api_key = os.getenv("GROQ_API_KEY")
 
-# Configure Gemini
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
+# Configure Groq Client
+client = Groq(api_key=api_key)
 
-st.set_page_config(page_title="AI MCQ Generator", page_icon="📝")
-
-st.title("📝 AI MCQ Generator")
-st.subheader("Generate high-quality questions from any text")
+st.title("📝 AI MCQ Generator (Powered by Groq)")
 
 # Input Section
 text_input = st.text_area("Paste your content here:", height=200)
@@ -25,26 +20,28 @@ if st.button("Generate MCQs"):
     if not text_input:
         st.error("Please provide some text first!")
     else:
-        with st.spinner("Generating questions..."):
-            prompt = f"""
-            Generate {num_questions} multiple-choice questions based on the following text. 
-            Format each question as follows:
-            Question: [The question]
-            A) [Option]
-            B) [Option]
-            C) [Option]
-            D) [Option]
-            Correct Answer: [Letter]
-            
-            Text: {text_input}
-            """
-            
+        with st.spinner("Generating questions at lightning speed..."):
             try:
-                response = model.generate_content(prompt)
+                # Call Groq Chat Completion
+                response = client.chat.completions.create(
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": f"Generate {num_questions} multiple-choice questions from the text. Format: Question, Options (A-D), and Correct Answer."
+                        },
+                        {
+                            "role": "user",
+                            "content": text_input,
+                        }
+                    ],
+                    # Common Groq models: 'llama-3.3-70b-versatile' or 'llama-3.1-8b-instant'
+                    model="llama-3.3-70b-versatile", 
+                )
+                
                 st.success("Generated successfully!")
                 st.markdown("---")
-                st.markdown(response.text)
+                # Access the content through choices[0].message.content
+                st.markdown(response.choices[0].message.content)
+                
             except Exception as e:
                 st.error(f"An error occurred: {e}")
-
-st.sidebar.info("Built with Streamlit and Gemini API")
