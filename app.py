@@ -10,7 +10,7 @@ api_key = os.getenv("GROQ_API_KEY")
 # Configure Groq Client
 client = Groq(api_key=api_key)
 
-st.title("📝 AI MCQ Generator (Powered by Groq)")
+st.title("MCQ Generator")
 
 # Input Section
 text_input = st.text_area("Paste your content here:", height=200)
