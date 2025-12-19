@@ -14,7 +14,7 @@ st.title("MCQ Generator")
 
 # Input Section
 text_input = st.text_area("Paste your content here:", height=200)
-num_questions = st.slider("Number of questions", min_value=1, max_value=10, value=3)
+num_questions = st.slider("Number of questions", min_value=1, max_value=30, value=5)
 
 if st.button("Generate MCQs"):
     if not text_input:
