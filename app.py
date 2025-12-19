@@ -10,7 +10,7 @@ api_key = os.getenv("GEMINI_API_KEY")
 
 # Configure Gemini
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 st.set_page_config(page_title="AI MCQ Generator", page_icon="📝")
 
